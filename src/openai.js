@@ -1,49 +1,48 @@
-import { Configuration, OpenAIApi } from "openai"
-import { createReadStream } from "fs"
-import config from "config"
+import { Configuration, OpenAIApi } from 'openai';
+import { createReadStream } from 'fs';
+import config from 'config';
 
-import { removeFile } from "./utils.js";
+import { removeFile } from './utils.js';
 
 class OpenAI {
-    roles = {
-        ASSISTANT: 'assistant',
-        USER: 'user',
-        SYSTEM: 'system',
-    }
+  roles = {
+    ASSISTANT: 'assistant',
+    USER: 'user',
+    SYSTEM: 'system',
+  };
 
-    constructor(apiKey) {
-        const configuration = new Configuration({
-            apiKey,
-        });
-        this.openai = new OpenAIApi(configuration);
-    }
+  constructor(apiKey) {
+    const configuration = new Configuration({
+      apiKey,
+    });
+    this.openai = new OpenAIApi(configuration);
+  }
 
-    async chat(messages) {
-        try {
-            const response = await this.openai.createChatCompletion({
-                model: 'gpt-3.5-turbo',
-                messages
-            })
+  async chat(messages) {
+    try {
+      const response = await this.openai.createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        messages,
+      });
 
-            return response.data.choices[0].message
-        }
-        catch (e) {
-            console.log('Error while GPTChat', e.message);
-        }
+      return response.data.choices[0].message;
+    } catch (e) {
+      console.log('Error while GPTChat', e.message);
     }
+  }
 
-    async transcription(filepath) {
-        try {
-            const response = await this.openai.createTranscription(
-                createReadStream(filepath),
-                'whisper-1'
-            )
-            removeFile(filepath)
-            return response.data.text
-        } catch (e) {
-            console.log('Error while transcription', e.message);
-        }
+  async transcription(filepath) {
+    try {
+      const response = await this.openai.createTranscription(
+        createReadStream(filepath),
+        'whisper-1',
+      );
+      removeFile(filepath);
+      return response.data.text;
+    } catch (e) {
+      console.log('Error while transcription', e.message);
     }
+  }
 }
 
-export const openai = new OpenAI(config.get("OPENAI_KEY"))
+export const openai = new OpenAI(config.get('OPENAI_KEY'));
