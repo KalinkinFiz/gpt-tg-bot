@@ -31,7 +31,6 @@ class OggConverter {
         } catch (e) {
             console.log('Error while creating mp3', e.message);
         }
-
     }
 
     async create(url, filename) {
@@ -52,9 +51,7 @@ class OggConverter {
         } catch (e) {
             console.log('Error while creating ogg', e.message);
         }
-
     }
-
 }
 
 export const ogg = new OggConverter()
