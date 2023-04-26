@@ -2,6 +2,8 @@ import { Configuration, OpenAIApi } from "openai"
 import { createReadStream } from "fs"
 import config from "config"
 
+import { removeFile } from "./utils.js";
+
 class OpenAI {
     roles = {
         ASSISTANT: 'assistant',
@@ -36,7 +38,7 @@ class OpenAI {
                 createReadStream(filepath),
                 'whisper-1'
             )
-
+            removeFile(filepath)
             return response.data.text
         } catch (e) {
             console.log('Error while transcription', e.message);
